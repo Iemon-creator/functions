@@ -1,0 +1,329 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Desmos Graphs: iemon-creator Github</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.header {
+  padding: 30px;
+  background-color: #F8F8F8;
+}
+.heading {
+  color: #444;
+  font-size: 25px;
+}
+.header a {
+  font-size: 28px;
+  color: #4D4;
+  text-decoration: none;
+}
+.header span {
+  color: #888;
+  font-size: 15px;
+}
+#navbar {
+  padding-left: 30px;
+  position: sticky;
+  top: 0;
+  overflow: hidden;
+  background-color: #4D4;
+}
+#navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  transition:  background-color 0.25s;
+}
+#navbar a:hover {
+  background-color: #0A0;
+}
+#navbar a.active {
+  background-color: #0A0;
+}
+.content {
+  padding: 30px;
+  color: #888;
+  font-size: 15px;
+}
+.content a {
+  font-weight: bold;
+  text-decoration: none;
+  color: #00f;
+  font-size: 15px;
+}
+.math {
+  color: black;
+  font-size: 30px;
+  font-family: times, serif;
+}
+.math input {
+  font-size: 30px;
+  font-family: times, serif;
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <a href="https://iemon-creator.github.io/" draggable="false">IEMON-CREATOR.GITHUB.IO</a><br>
+  <span>Mathematics and more</span>
+</div>
+<div id="navbar">
+  <a href="https://iemon-creator.github.io/" draggable="false">Home</a>
+  <a href="https://iemon-creator.github.io/desmos-graphs/" draggable="false">Desmos Graphs</a>
+  <a href="https://iemon-creator.github.io/suggestions/" draggable="false">Suggestions</a>
+  <a class="active">JS Math Functions</a>
+</div>
+<div class="content">
+  <span class="heading">JS Math Functions</span><br><br>
+  Hello! These are the non-elementary mathematical functions (with Javascript)
+  I gathered: (Feel free to copy and delete the comments on codes)<br><br>
+  <span class="heading">Error Function</span><br><br>
+  <span class="math">erf(<i>x</i>) =
+    <span id="erf_result">0</span><br>
+    <i>x &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= </i>
+    <input id="erf_input" autocomplete="off" spellcheck="false" style="outline: none;">
+  </span><br><br>
+  <textarea readonly style="resize: none; overflow: hidden; width: 506px; height: 645px; outline: none;">
+function erf(x) {
+  const ax = Math.abs(x);
+  const sx = Math.sign(x);
+
+  // Small x: Polynomial Approximation
+  if (ax < 0.84375) {
+    const t = x * x;
+    return x + (0.12837916709551256
+      + t * (-0.3250421072470015 + t * (-0.02848174957559851
+      + t * (-0.005770270296489442 + t * -0.000023763016656650163))))
+      / (1 + t * (0.39791722395915535 + t * (0.0650222499887673
+      + t * (0.005081306281875766 + t * (0.00013249473800432164
+      + t * -0.000003960228278775368))))) * x;
+  }
+
+  // Medium x: Polynomial Approximation
+  if (ax < 1.25) {
+    const t = ax - 1;
+    return (0.8450629115104675 + (-0.0023621185607526594
+      + t * (0.41485611868374833 + t * (-0.3722078760357013
+      + t * (0.31834661990116175 + t * (-0.11089469428239668
+      + t * (0.035478304325618236 + t * -0.002166375594868791))))))
+      / (1 + t * (0.10642088040084423
+      + t * (0.540397917702171 + t * (0.07182865441419627
+      + t * (0.12617121980876164 + t * (0.01363708391202905
+      + t * 0.011984499846799107))))))) * sx;
+  }
+
+  const x2 = x * x;
+  const t = 1 / x2;
+
+  // Large x: Asymptotic Expansion erfc
+  return (1 - Math.exp(-x2 - 0.5625 +
+    (-0.009864944034847148 + t * (-0.6938585727071818
+    + t * (-10.558626225323291 + t * (-62.375332450326006
+    + t * (-162.39666946257347 + t * (-184.60509290671104
+    + t * (-81.2874355063066 + t * -9.814329344169145)))))))
+    / (1 + t * (19.651271667439257 + t * (137.65775414351904
+    + t * (434.56587747522923 + t * (645.3872717332679
+    + t * (429.00814002756783 + t * (108.63500554177944
+    + t * (6.570249770319282 + t * -0.0604244152148581)))))))))
+    / ax) * sx;
+}</textarea><br><br>
+  <span class="heading">Digamma Function</span><br><br>
+  <span class="math"><i>ψ</i>(<i>z</i>) =
+    <span id="digamma_result">-Infinity</span><br>
+    <i>z &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= </i>
+    <input id="digamma_input" autocomplete="off" spellcheck="false" style="outline: none;">
+  </span><br><br>
+  <textarea readonly style="resize: none; overflow: hidden; width: 455px; height: 345px; outline: none;">
+const EULER = 0.5772156649015329;
+const SPECIAL_CASE = [-1 / 0, -EULER, 1 - EULER, 1.5 - EULER];
+
+function digamma(z) {
+  // Special case
+  const s = SPECIAL_CASE[z];
+  if (s) return s;
+
+  // Reflection formula
+  if (z < 0) return digamma(1 - z)
+    - Math.PI / Math.tan(Math.PI * (z - Math.round(z)));
+
+  // Push x to > 10
+  let sum = 0;
+  while (z < 10) sum -= 1 / z, z++;
+  
+  // Asymptotic expansion
+  const t = 1 / (z * z);
+  return sum + Math.log(z) - 1 / (2 * z)
+    - t * (1 / 12 - t * (1 / 120
+    - t * (1 / 252 - t * (1 / 240
+    - t * (5 / 660 - t * (691 / 32760 - t / 12))))));
+}</textarea><br><br>
+  <span class="heading">Lambert W Function (Principal Branch)</span><br><br>
+  <span class="math"><i>W</i>(<i>x</i>) =
+    <span id="lambert_w_result">0</span><br>
+    <i>x &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; = </i>
+    <input id="lambert_w_input" autocomplete="off" spellcheck="false" style="outline: none;">
+  </span><br><br>
+  <textarea readonly style="resize: none; overflow: hidden; width: 434px; height: 540px; outline: none;">
+const ONE_OVER_E = 1 / Math.E;
+
+function lambert_w(x) {
+  let guesses = [];
+  let result;
+
+  // Special case
+  if (x == -ONE_OVER_E) return -1;
+  if (x < -ONE_OVER_E) return NaN;
+
+  // Starting guess
+  if (x < 0.3) {
+    // Curve approximation Near 0 to branch point
+    result = Math.sqrt(Math.E * (x + ONE_OVER_E)) - 1;
+  } else if (x < 3) {
+    // Curve approximation 3 > x > 0.3
+    result = Math.sqrt(x / 2.1) - 0.125;
+  } else {
+    // Asymptotic Expansion
+    const l = Math.log(x);
+    result = l - Math.log(l);
+  }
+
+  // Halley's Method (Max ~5 iterations on every x)
+  while (!guesses.includes(result)) {
+    guesses.push(result);
+
+    const exp = Math.exp(result);
+    const t = result * exp - x;
+    const u = result + 1;
+
+    result -= t / (u * exp - ((result + 2) * t) / (2 * u));
+  }
+
+  return result;
+}</textarea>
+</div>
+<script>
+const ONE_OVER_E = 1 / Math.E;
+
+function lambert_w(x) {
+  let guesses = [];
+  let result;
+
+  if (x == -ONE_OVER_E) return -1;
+  if (x < -ONE_OVER_E) return NaN;
+
+  if (x < 0.3) {
+    result = Math.sqrt(Math.E * (x + ONE_OVER_E)) - 1;
+  } else if (x < 3) {
+    result = Math.sqrt(x / 2.1) - 0.125;
+  } else {
+    const l = Math.log(x);
+    result = l - Math.log(l);
+  }
+
+  while (!guesses.includes(result)) {
+    guesses.push(result);
+
+    const exp = Math.exp(result);
+    const t = result * exp - x;
+    const u = result + 1;
+
+    result -= t / (u * exp - ((result + 2) * t) / (2 * u));
+  }
+
+  return result;
+}
+
+const EULER = 0.5772156649015329;
+const SPECIAL_CASE = [-1 / 0, -EULER, 1 - EULER, 1.5 - EULER];
+
+function digamma(z) {
+  const s = SPECIAL_CASE[z];
+
+  if (s) return s;
+  if (z < 0) return digamma(1 - z)
+    - Math.PI / Math.tan(Math.PI * (z - Math.round(z)));
+
+  let sum = 0;
+  while (z < 10) sum -= 1 / z, z++;
+
+  const t = 1 / (z * z);
+  return sum + Math.log(z) - 1 / (2 * z)
+    - t * (1 / 12 - t * (1 / 120
+    - t * (1 / 252 - t * (1 / 240
+    - t * (5 / 660 - t * (691 / 32760 - t / 12))))));
+}
+
+function erf(x) {
+  const ax = Math.abs(x);
+  const sx = Math.sign(x);
+
+  if (ax < 0.84375) {
+    const t = x * x;
+    return x + (0.12837916709551256
+      + t * (-0.3250421072470015 + t * (-0.02848174957559851
+      + t * (-0.005770270296489442 + t * -0.000023763016656650163))))
+      / (1 + t * (0.39791722395915535 + t * (0.0650222499887673
+      + t * (0.005081306281875766 + t * (0.00013249473800432164
+      + t * -0.000003960228278775368))))) * x;
+  }
+  if (ax < 1.25) {
+    const t = ax - 1;
+    return (0.8450629115104675 + (-0.0023621185607526594
+      + t * (0.41485611868374833 + t * (-0.3722078760357013
+      + t * (0.31834661990116175 + t * (-0.11089469428239668
+      + t * (0.035478304325618236 + t * -0.002166375594868791))))))
+      / (1 + t * (0.10642088040084423
+      + t * (0.540397917702171 + t * (0.07182865441419627
+      + t * (0.12617121980876164 + t * (0.01363708391202905
+      + t * 0.011984499846799107))))))) * sx;
+  }
+
+  const x2 = x * x;
+  const t = 1 / x2;
+
+  return (1 - Math.exp(-x2 - 0.5625 +
+    (-0.009864944034847148 + t * (-0.6938585727071818
+    + t * (-10.558626225323291 + t * (-62.375332450326006
+    + t * (-162.39666946257347 + t * (-184.60509290671104
+    + t * (-81.2874355063066 + t * -9.814329344169145)))))))
+    / (1 + t * (19.651271667439257 + t * (137.65775414351904
+    + t * (434.56587747522923 + t * (645.3872717332679
+    + t * (429.00814002756783 + t * (108.63500554177944
+    + t * (6.570249770319282 + t * -0.0604244152148581)))))))))
+    / ax) * sx;
+}
+
+const erf_input = document.getElementById("erf_input");
+erf_input.addEventListener("input", () => {2
+  let value = erf(Number(erf_input.value));
+  if (isNaN(value)) value ="⚠ Only real inputs allowed";
+
+  document.getElementById("erf_result").innerHTML = value;
+});
+
+const digamma_input = document.getElementById("digamma_input");
+digamma_input.addEventListener("input", () => {2
+  let value = digamma(Number(digamma_input.value));
+  if (isNaN(value)) value ="⚠ Only real inputs allowed";
+
+  document.getElementById("digamma_result").innerHTML = value;
+});
+
+const lambert_w_input = document.getElementById("lambert_w_input");
+lambert_w_input.addEventListener("input", () => {2
+  let value = lambert_w(Number(lambert_w_input.value));
+  if (isNaN(value)) value ="⚠ Only real inputs allowed";
+
+  document.getElementById("lambert_w_result").innerHTML = value;
+});
+</script>
+</body>
+</html>
